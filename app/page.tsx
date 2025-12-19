@@ -35,7 +35,7 @@ export default function Home() {
   }, [month]);
 
   return (
-    <main className="p-10 max-w-6xl mx-auto bg-gray-50 min-h-screen">
+    <main className="p-10 max-w-6xl mx-auto bg-white min-h-screen">
       <h1 className="text-3xl font-bold mb-10 text-center text-gray-900">
         Leave & Productivity Analyzer
       </h1>
