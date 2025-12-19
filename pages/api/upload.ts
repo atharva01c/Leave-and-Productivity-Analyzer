@@ -12,7 +12,9 @@ export const config = {
   api: {
     bodyParser: false,
   },
+  runtime: "nodejs",
 };
+
 
 export default async function handler(
   req: NextApiRequest,
