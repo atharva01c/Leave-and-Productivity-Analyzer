@@ -17,15 +17,14 @@ FEATURES:
 
 - Dashboard showing expected hours, worked hours, leaves used, and productivity percentage
 
-Daily attendance breakdown table
+- Daily attendance breakdown table
 <br><br>
 
 BUSINESS RULES IMPLEMENTED:
-Working Hours
 
-- Monday to Friday: 8.5 hours per day from 10:00 AM to 6:30 PM
+- Working Hours on Monday to Friday: 8.5 hours per day from 10:00 AM to 6:30 PM
 
-- Saturday: 4 hours per day from 10:00 AM to 2:00 PM
+- Working Hours on Saturday: 4 hours per day from 10:00 AM to 2:00 PM
 
 - Sunday: Off
 
