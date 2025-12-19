@@ -1,4 +1,4 @@
-# Leave-productivity-analyzer
+# Leave And Productivity Analyzer
 
 A full stack web application that analyzes employee attendance, leave usage, and productivity using Excel attendance data. The application processes uploaded Excel files, applies predefined business rules, and presents a monthly dashboard with productivity insights.
 <br>
