@@ -5,17 +5,17 @@ A full stack web application that analyzes employee attendance, leave usage, and
 <br>
 FEATURES:
 
-Upload Excel attendance files in xlsx format
+- Upload Excel attendance files in xlsx format
 
-Parse employee attendance data
+- Parse employee attendance data
 
-Calculate daily worked hours
+- Calculate daily worked hours
 
-Automatically mark leave days
+- Automatically mark leave days
 
-Monthly productivity analysis
+- Monthly productivity analysis
 
-Dashboard showing expected hours, worked hours, leaves used, and productivity percentage
+- Dashboard showing expected hours, worked hours, leaves used, and productivity percentage
 
 Daily attendance breakdown table
 <br><br>
@@ -23,17 +23,17 @@ Daily attendance breakdown table
 BUSINESS RULES IMPLEMENTED:
 Working Hours
 
-Monday to Friday: 8.5 hours per day from 10:00 AM to 6:30 PM
+- Monday to Friday: 8.5 hours per day from 10:00 AM to 6:30 PM
 
-Saturday: 4 hours per day from 10:00 AM to 2:00 PM
+- Saturday: 4 hours per day from 10:00 AM to 2:00 PM
 
-Sunday: Off
+- Sunday: Off
 
-Leave Policy
+- Leave Policy
 
-Each employee is allowed 2 leaves per month
+- Each employee is allowed 2 leaves per month
 
-Missing attendance on a working day is considered a leave
+- Missing attendance on a working day is considered a leave
 <br><br>
 
 PRODUCTIVITY CALCULATION:
