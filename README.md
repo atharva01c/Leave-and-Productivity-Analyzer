@@ -1,7 +1,6 @@
 # Leave-productivity-analyzer
 
 A full stack web application that analyzes employee attendance, leave usage, and productivity using Excel attendance data. The application processes uploaded Excel files, applies predefined business rules, and presents a monthly dashboard with productivity insights.
-
 <br><br>
 
 FEATURES:
@@ -19,7 +18,6 @@ Monthly productivity analysis
 Dashboard showing expected hours, worked hours, leaves used, and productivity percentage
 
 Daily attendance breakdown table
-
 <br><br>
 
 BUSINESS RULES IMPLEMENTED:
@@ -36,7 +34,6 @@ Leave Policy
 Each employee is allowed 2 leaves per month
 
 Missing attendance on a working day is considered a leave
-
 <br><br>
 
 PRODUCTIVITY CALCULATION:
@@ -55,7 +52,6 @@ Database: MongoDB
 ORM: Prisma
 
 Excel Parsing: xlsx
-
 <br><br>
 
 HOW TO RUN LOCALLY:
