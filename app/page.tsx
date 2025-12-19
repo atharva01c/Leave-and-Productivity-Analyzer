@@ -133,7 +133,7 @@ export default function Home() {
           </div>
 
           {/* ================= Attendance Table ================= */}
-          <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white">
+          <div className="overflow-x-auto border border-gray-300 bg-white">
             <table className="w-full text-gray-900">
               <thead>
                 <tr className="bg-gray-200">
