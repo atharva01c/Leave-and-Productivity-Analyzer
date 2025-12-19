@@ -1,9 +1,9 @@
 # Leave-productivity-analyzer
 
 A full stack web application that analyzes employee attendance, leave usage, and productivity using Excel attendance data. The application processes uploaded Excel files, applies predefined business rules, and presents a monthly dashboard with productivity insights.
+<br>
 
-
-FEATURES
+FEATURES:
 
 Upload Excel attendance files in xlsx format
 
@@ -20,7 +20,7 @@ Dashboard showing expected hours, worked hours, leaves used, and productivity pe
 Daily attendance breakdown table
 
 
-BUSINESS RULES IMPLEMENTED
+BUSINESS RULES IMPLEMENTED:
 Working Hours
 
 Monday to Friday: 8.5 hours per day from 10:00 AM to 6:30 PM
@@ -36,12 +36,12 @@ Each employee is allowed 2 leaves per month
 Missing attendance on a working day is considered a leave
 
 
-PRODUCTIVITY CALCULATION
+PRODUCTIVITY CALCULATION:
 
 Productivity = (Actual Worked Hours / Expected Working Hours) × 100
 
 
-TECH STACK
+TECH STACK:
 
 Frontend: Next.js, TypeScript, Tailwind CSS
 
@@ -55,7 +55,7 @@ Excel Parsing: xlsx
 
 
 
-HOW TO RUN LOCALLY
+HOW TO RUN LOCALLY:
 
 1. Clone the repository
 ```
