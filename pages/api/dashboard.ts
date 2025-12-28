@@ -5,12 +5,13 @@ export const config = {
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/app/lib/prisma";
 
+// Calculate expected hours for a month (excluding Sundays)
 function getExpectedHours(year: number, month: number) {
   let expected = 0;
   const date = new Date(year, month, 1);
 
   while (date.getMonth() === month) {
-    const day = date.getDay(); // 0 = Sun, 6 = Sat
+    const day = date.getDay(); // 0 = Sunday, 6 = Saturday
 
     if (day >= 1 && day <= 5) {
       expected += 8.5; // Mon–Fri
@@ -28,6 +29,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // 🚫 Disable caching completely (fixes 304 issue)
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate"
+  );
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
   try {
     const { employee, month } = req.query;
 
@@ -45,7 +54,16 @@ export default async function handler(
     });
 
     if (!emp) {
-      return res.status(404).json({ error: "Employee not found" });
+      return res.status(200).json({
+        employee,
+        month,
+        expectedHours: 0,
+        totalWorkedHours: 0,
+        leavesUsed: 0,
+        maxLeaves: 2,
+        productivity: 0,
+        daily: [],
+      });
     }
 
     const records = await prisma.attendance.findMany({
@@ -56,24 +74,32 @@ export default async function handler(
       orderBy: { date: "asc" },
     });
 
-    const totalWorked = records.reduce(
-      (sum, r) => sum + r.workedHours,
-      0
-    );
+    let totalWorkedHours = 0;
+    let leavesUsed = 0;
 
-    const leavesUsed = records.filter(r => r.isLeave).length;
+    records.forEach(r => {
+      const day = new Date(r.date).getDay();
+
+      // Sunday → OFF, do not count
+      if (day === 0) return;
+
+      totalWorkedHours += r.workedHours;
+
+      if (r.isLeave) leavesUsed += 1;
+    });
+
     const expectedHours = getExpectedHours(year, mon - 1);
 
     const productivity =
       expectedHours === 0
         ? 0
-        : Math.round((totalWorked / expectedHours) * 100);
+        : Number(((totalWorkedHours / expectedHours) * 100).toFixed(2));
 
     return res.status(200).json({
       employee: emp.name,
       month,
       expectedHours,
-      totalWorkedHours: totalWorked,
+      totalWorkedHours,
       leavesUsed,
       maxLeaves: 2,
       productivity,

@@ -6,6 +6,7 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [data, setData] = useState<any>(null);
   const [month, setMonth] = useState("2024-01");
+  const employee = "John Doe";
 
   async function uploadFile() {
     if (!file) return alert("Select a file");
@@ -13,19 +14,26 @@ export default function Home() {
     const form = new FormData();
     form.append("file", file);
 
-    await fetch("/api/upload", {
+    const res = await fetch("/api/upload", {
       method: "POST",
       body: form,
     });
 
+    if (!res.ok) {
+      alert("Upload failed");
+      return;
+    }
+
     alert("Excel uploaded successfully");
-    loadDashboard();
+    await loadDashboard();
   }
 
   async function loadDashboard() {
     const res = await fetch(
-      `/api/dashboard?employee=John Doe&month=${month}`
+      `/api/dashboard?employee=${encodeURIComponent(employee)}&month=${month}`,
+      { cache: "no-store" }
     );
+
     const json = await res.json();
     setData(json);
   }
@@ -40,7 +48,7 @@ export default function Home() {
         Leave & Productivity Analyzer
       </h1>
 
-      {/* ================= Upload Section ================= */}
+      {/* Upload Section */}
       <div className="border border-gray-300 rounded-xl p-6 mb-12 bg-white shadow-md">
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
           Upload Attendance Excel
@@ -77,7 +85,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ================= Dashboard Section ================= */}
+      {/* Dashboard */}
       {data && (
         <div className="border border-gray-300 rounded-xl p-8 bg-gray-100 shadow-lg">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
@@ -93,9 +101,9 @@ export default function Home() {
             />
           </div>
 
-          {/* ================= Summary Cards ================= */}
+          {/* Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div className="p-5 bg-slate-50 border border-gray-300 rounded-lg shadow text-center">
+            <div className="p-5 bg-white border border-gray-300 rounded-lg shadow text-center">
               <p className="text-sm text-gray-700 font-medium">
                 Expected Hours
               </p>
@@ -104,16 +112,16 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="p-5 bg-slate-50 border border-gray-300 rounded-lg shadow text-center">
+            <div className="p-5 bg-white border border-gray-300 rounded-lg shadow text-center">
               <p className="text-sm text-gray-700 font-medium">
                 Worked Hours
               </p>
               <p className="text-2xl font-bold text-gray-900">
-                {data.totalWorkedHours}
+                {Number(data.totalWorkedHours).toFixed(2)}
               </p>
             </div>
 
-            <div className="p-5 bg-slate-50 border border-gray-300 rounded-lg shadow text-center">
+            <div className="p-5 bg-white border border-gray-300 rounded-lg shadow text-center">
               <p className="text-sm text-gray-700 font-medium">
                 Leaves Used
               </p>
@@ -122,7 +130,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="p-5 bg-slate-50 border border-gray-300 rounded-lg shadow text-center">
+            <div className="p-5 bg-white border border-gray-300 rounded-lg shadow text-center">
               <p className="text-sm text-gray-700 font-medium">
                 Productivity
               </p>
@@ -132,7 +140,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ================= Attendance Table ================= */}
+          {/* Attendance Table */}
           <div className="overflow-x-auto border border-gray-300 bg-white">
             <table className="w-full text-gray-900">
               <thead>
@@ -145,30 +153,40 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {data.daily.map((d: any) => (
-                  <tr
-                    key={d.id}
-                    className="text-center hover:bg-gray-50"
-                  >
-                    <td className="border p-3">
-                      {new Date(d.date).toDateString()}
-                    </td>
-                    <td className="border p-3">{d.inTime || "-"}</td>
-                    <td className="border p-3">{d.outTime || "-"}</td>
-                    <td className="border p-3">{d.workedHours}</td>
-                    <td className="border p-3">
-                      {d.isLeave ? (
-                        <span className="text-red-700 font-semibold">
-                          Leave
-                        </span>
-                      ) : (
-                        <span className="text-green-700 font-semibold">
-                          Present
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {data.daily.map((d: any) => {
+                  const day = new Date(d.date).getDay();
+
+                  return (
+                    <tr
+                      key={d.id}
+                      className="text-center hover:bg-gray-50"
+                    >
+                      <td className="border p-3">
+                        {new Date(d.date).toDateString()}
+                      </td>
+                      <td className="border p-3">{d.inTime || "-"}</td>
+                      <td className="border p-3">{d.outTime || "-"}</td>
+                      <td className="border p-3">
+                        {Number(d.workedHours).toFixed(2)}
+                      </td>
+                      <td className="border p-3">
+                        {day === 0 ? (
+                          <span className="text-gray-600 font-semibold">
+                            Off
+                          </span>
+                        ) : d.isLeave ? (
+                          <span className="text-red-700 font-semibold">
+                            Leave
+                          </span>
+                        ) : (
+                          <span className="text-green-700 font-semibold">
+                            Present
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

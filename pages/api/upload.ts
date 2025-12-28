@@ -15,7 +15,6 @@ export const config = {
   runtime: "nodejs",
 };
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -28,7 +27,7 @@ export default async function handler(
     const form = formidable({ keepExtensions: true });
 
     const { files } = await new Promise<any>((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
+      form.parse(req, (err, _fields, files) => {
         if (err) reject(err);
         resolve({ files });
       });
@@ -44,7 +43,6 @@ export default async function handler(
       : uploadedFile.filepath;
 
     const buffer = fs.readFileSync(filePath);
-
     const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json<any>(sheet);
@@ -64,13 +62,7 @@ export default async function handler(
 
       if (isNaN(date.getTime())) continue;
 
-      // ✅ Convert Excel times for DB storage
-      const storedInTime = excelTimeToString(rawInTime);
-      const storedOutTime = excelTimeToString(rawOutTime);
-
-      // ✅ Calculate using RAW values only
-      const workedHours = calculateWorkedHours(rawInTime, rawOutTime);
-      const isLeave = !storedInTime || !storedOutTime;
+      const day = date.getDay();
 
       const employee = await prisma.employee.upsert({
         where: { name },
@@ -78,13 +70,35 @@ export default async function handler(
         create: { name },
       });
 
-      // 🔒 ONLY STRINGS GO INTO PRISMA
+      // Delete existing record for same day (prevents duplicates)
+      await prisma.attendance.deleteMany({
+        where: {
+          employeeId: employee.id,
+          date,
+        },
+      });
+
+      const inTime = excelTimeToString(rawInTime);
+      const outTime = excelTimeToString(rawOutTime);
+
+      let workedHours = 0;
+      let isLeave = false;
+
+      // Sunday → OFF
+      if (day !== 0) {
+        if (!inTime || !outTime) {
+          isLeave = true;
+        } else {
+          workedHours = calculateWorkedHours(rawInTime, rawOutTime);
+        }
+      }
+
       await prisma.attendance.create({
         data: {
           employeeId: employee.id,
           date,
-          inTime: storedInTime,
-          outTime: storedOutTime,
+          inTime,
+          outTime,
           workedHours,
           isLeave,
         },
