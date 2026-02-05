@@ -82,7 +82,3 @@ npx prisma db push
 ```
 npm run dev
 ```
-
-Open the application in the browser
-
-http://localhost:3000
