@@ -1,4 +1,4 @@
-# Leave And Productivity Analyzer.
+# Leave And Productivity Analyzer
 
 Deployed here: https://leave-and-productivity-analyzer.vercel.app/
 
